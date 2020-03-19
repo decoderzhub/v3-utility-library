@@ -176,7 +176,7 @@ class MarkerClusterer {
 
     // Add the map event listeners
     var that = this;
-    google.maps.event.addListener(this.map_, "zoom_changed", function() {
+    google.maps.event.addListener(this.map_, "zoom_changed", function () {
       // Determines map type and prevent illegal zoom levels
       var zoom = that.map_.getZoom();
       var minZoom = that.map_.minZoom || 0;
@@ -192,7 +192,7 @@ class MarkerClusterer {
       }
     });
 
-    google.maps.event.addListener(this.map_, "idle", function() {
+    google.maps.event.addListener(this.map_, "idle", function () {
       that.redraw();
     });
 
@@ -214,7 +214,7 @@ class MarkerClusterer {
    * @ignore
    */
   extend(obj1, obj2) {
-    return function(object) {
+    return function (object) {
       for (var property in object.prototype) {
         this.prototype[property] = object.prototype[property];
       }
@@ -234,7 +234,7 @@ class MarkerClusterer {
    * Implementaion of the interface method.
    * @ignore
    */
-  draw() {}
+  draw() { }
 
   /**
    * Sets up the styles object.
@@ -432,7 +432,7 @@ class MarkerClusterer {
       // If the marker is draggable add a listener so we update the clusters on
       // the drag end.
       var that = this;
-      google.maps.event.addListener(marker, "dragend", function() {
+      google.maps.event.addListener(marker, "dragend", function () {
         marker.isAdded = false;
         that.repaint();
       });
@@ -697,7 +697,7 @@ class MarkerClusterer {
 
     // Remove the old clusters.
     // Do it in a timeout so the other clusters have been drawn first.
-    setTimeout(function() {
+    setTimeout(function () {
       for (var i = 0, cluster; (cluster = oldClusters[i]); i++) {
         cluster.remove();
       }
@@ -731,9 +731,9 @@ class MarkerClusterer {
     var a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((p1.lat() * Math.PI) / 180) *
-        Math.cos((p2.lat() * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos((p2.lat() * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
     return d;
@@ -1031,6 +1031,7 @@ class ClusterIcon {
     this.cluster_ = cluster;
     this.center_ = null;
     this.map_ = cluster.getMap();
+    this.node = null;
     this.div_ = null;
     this.sums_ = null;
     this.visible_ = false;
@@ -1065,17 +1066,20 @@ class ClusterIcon {
    */
   onAdd() {
     this.div_ = document.createElement("DIV");
+    this.node = document.createElement("DIV")
+    this.node.id = "hello world"
     if (this.visible_) {
       var pos = this.getPosFromLatLng_(this.center_);
       this.div_.style.cssText = this.createCss(pos);
       this.div_.innerHTML = this.sums_.text;
+      this.div_.appendChild(this.node)
     }
 
     var panes = this.getPanes();
     panes.overlayMouseTarget.appendChild(this.div_);
 
     var that = this;
-    google.maps.event.addDomListener(this.div_, "click", function() {
+    google.maps.event.addDomListener(this.div_, "click", function () {
       that.triggerClusterClick();
     });
   }
@@ -1213,10 +1217,10 @@ class ClusterIcon {
       ) {
         style.push(
           "height:" +
-            (this.height_ - this.anchor_[0]) +
-            "px; padding-top:" +
-            this.anchor_[0] +
-            "px;"
+          (this.height_ - this.anchor_[0]) +
+          "px; padding-top:" +
+          this.anchor_[0] +
+          "px;"
         );
       } else {
         style.push(
@@ -1230,10 +1234,10 @@ class ClusterIcon {
       ) {
         style.push(
           "width:" +
-            (this.width_ - this.anchor_[1]) +
-            "px; padding-left:" +
-            this.anchor_[1] +
-            "px;"
+          (this.width_ - this.anchor_[1]) +
+          "px; padding-left:" +
+          this.anchor_[1] +
+          "px;"
         );
       } else {
         style.push("width:" + this.width_ + "px; text-align:center;");
@@ -1241,12 +1245,12 @@ class ClusterIcon {
     } else {
       style.push(
         "height:" +
-          this.height_ +
-          "px; line-height:" +
-          this.height_ +
-          "px; width:" +
-          this.width_ +
-          "px; text-align:center;"
+        this.height_ +
+        "px; line-height:" +
+        this.height_ +
+        "px; width:" +
+        this.width_ +
+        "px; text-align:center;"
       );
     }
 
@@ -1255,14 +1259,14 @@ class ClusterIcon {
 
     style.push(
       "cursor:pointer; top:" +
-        pos.y +
-        "px; left:" +
-        pos.x +
-        "px; color:" +
-        txtColor +
-        "; position:absolute; font-size:" +
-        txtSize +
-        "px; font-family:Arial,sans-serif; font-weight:bold"
+      pos.y +
+      "px; left:" +
+      pos.x +
+      "px; color:" +
+      txtColor +
+      "; position:absolute; font-size:" +
+      txtSize +
+      "px; font-family:Arial,sans-serif; font-weight:bold"
     );
     return style.join("");
   }
